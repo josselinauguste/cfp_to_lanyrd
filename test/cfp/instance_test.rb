@@ -1,8 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
-
-$:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib')))
-
+require_relative '../test_helper'
 require 'cfp'
 
 class InstanceTest < Minitest::Test
