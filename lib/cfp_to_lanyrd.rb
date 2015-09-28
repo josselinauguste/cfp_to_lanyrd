@@ -10,6 +10,10 @@ def cfp_to_lanyrd(cfp, lanyrd_session)
   schedule = conference.schedule_list.schedules.first
   schedule.slots.each do |slot|
     session_presenter = BdxioSessionPresenter.new(slot)
+    unless session_presenter.eligible?
+      puts "Session \"#{session_presenter.title}\" is not eligible to export."
+      next
+    end
     next if lanyrd_session.session_present?(session_presenter.title)
     lanyrd_session.add_session(
       session_presenter.title,

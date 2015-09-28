@@ -13,7 +13,7 @@ class CfpToLanyrdTest < Minitest::Test
     session.verify
   end
 
-  def test_dont_create_existing_sessions_on_lanyrd
+  def test_dont_create_existing_session_on_lanyrd
     cfp = create_cfp
     session = Minitest::Mock.new
     session.expect :session_present?, true, ['Keynote']
@@ -23,19 +23,32 @@ class CfpToLanyrdTest < Minitest::Test
     session.verify
   end
 
+  def test_dont_create_uneligible_session_on_lanyrd
+    cfp = create_cfp(room_id: 'Foo')
+    session = Minitest::Mock.new
+
+    cfp_to_lanyrd cfp, session
+
+    session.verify
+  end
+
   private
 
-  def create_cfp
+  def create_cfp(room_id: 'GdAmphi')
     Object.new.tap do |instance|
+      instance.instance_variable_set('@room_id', room_id)
       def instance.conferences
         [] << Object.new.tap do |conference|
+          conference.instance_variable_set('@room_id', @room_id)
           def conference.schedule_list
             Object.new.tap do |schedule_list|
+              schedule_list.instance_variable_set('@room_id', @room_id)
               def schedule_list.schedules
                 [] << Object.new.tap do |schedule|
+                  schedule.instance_variable_set('@room_id', @room_id)
                   def schedule.slots
                     [] << CFP::Slot.new(
-                      room_id: 'GdAmphi',
+                      room_id: @room_id,
                       from_time: '07:00',
                       to_time: '07:50',
                       talk: CFP::Talk.new(
