@@ -38,6 +38,18 @@ class LanyrdSession
     @agent.button(value: 'Save session').click
   end
 
+  def delete_sessions
+    Kernel.loop do
+      @agent.goto "#{@base_url}edit/schedule/"
+      links = @agent.links(text: 'Remove session').to_a
+      break if links.length == 0
+      links.each do |link|
+        link.click
+        @agent.input(value: 'Delete session').when_present.click
+      end
+    end
+  end
+
   def speaker_present?(full_name)
     @agent.goto "#{@base_url}edit/speakers/?q=#{CGI.escape(full_name)}"
     page = Nokogiri::HTML(@agent.html)

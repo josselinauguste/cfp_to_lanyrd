@@ -28,5 +28,8 @@ if __FILE__ == $PROGRAM_NAME
   # 'http://cfp.bdx.io' '2015/bdxio'
   cfp = CFP::Instance.from(ARGV[0])
   session = LanyrdSession.new(ARGV[1], ENV['LANYRD_LOGIN'], ENV['LANYRD_PASSWORD'])
+  if ARGV[2] == '-clean'
+    session.delete_sessions
+  end
   cfp_to_lanyrd(cfp, session)
 end
