@@ -46,6 +46,13 @@ class BdxioSessionPresenterTest < Minitest::Test
     assert_equal 'TD 11', presenter.room
   end
 
+  def test_room_label_td_with_space
+    slot = CFP::Slot.new(room_id: 'Td 11')
+    presenter = BdxioSessionPresenter.new(slot)
+
+    assert_equal 'TD 11', presenter.room
+  end
+
   def test_slot_with_known_room_is_eligible
     slot = CFP::Slot.new(room_id: 'Td11', talk: CFP::Talk.new)
     presenter = BdxioSessionPresenter.new(slot)
