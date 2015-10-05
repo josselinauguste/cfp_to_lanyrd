@@ -6,7 +6,7 @@ class CfpToLanyrdTest < Minitest::Test
     cfp = create_cfp
     session = Minitest::Mock.new
     session.expect :session_present?, false, ['Keynote']
-    session.expect :add_session, nil, ['Keynote', 'Summary', '07:00', '07:50', 'Grand Amphi CapGé']
+    session.expect :add_session, nil, ['Keynote', 'Summary', '09:00', '09:50', 'Grand Amphi']
 
     cfp_to_lanyrd cfp, session
 

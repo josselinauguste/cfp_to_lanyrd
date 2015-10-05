@@ -11,7 +11,7 @@ def cfp_to_lanyrd(cfp, lanyrd_session)
   schedule.slots.each do |slot|
     session_presenter = BdxioSessionPresenter.new(slot)
     unless session_presenter.eligible?
-      puts "Session \"#{session_presenter.title}\" is not eligible to export."
+      puts "Session \"#{session_presenter.title}\" is not eligible to export." if session_presenter.title
       next
     end
     next if lanyrd_session.session_present?(session_presenter.title)

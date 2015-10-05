@@ -4,30 +4,30 @@ class BdxioSessionPresenter
   end
 
   def title
-    @slot.talk.title
+    @slot.talk ? @slot.talk.title : nil
   end
 
   def abstract
-    @slot.talk.summary
+    @slot.talk ? @slot.talk.summary : nil
   end
 
   def start_at
-    @slot.from_time
+    DateTime.parse(@slot.from_time).to_time.strftime('%H:%M')
   end
 
   def end_at
-    @slot.to_time
+    DateTime.parse(@slot.to_time).to_time.strftime('%H:%M')
   end
 
   def room
     case @slot.room_id
-    when 'GdAmphi' then 'Grand Amphi CapGé'
+    when 'GdAmphi' then 'Grand Amphi'
     when /Amphi(A|B|D|E)/ then "Amphi #{$1}"
-    when /Td(11)/ then "TD #{$1}"
+    when /Td(\d\d)/ then "TD #{$1}"
     end
   end
 
   def eligible?
-    !room.nil?
+    @slot.talk && !room.nil?
   end
 end
