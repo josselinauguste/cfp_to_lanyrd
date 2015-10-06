@@ -7,6 +7,7 @@ class CfpToLanyrdTest < Minitest::Test
     session = Minitest::Mock.new
     session.expect :session_present?, false, ['Keynote']
     session.expect :add_session, nil, ['Keynote', 'Summary', '09:00', '09:50', 'Grand Amphi']
+    session.expect :set_session_speakers, nil, ['Keynote', ['@dumb', '@dumber']]
 
     cfp_to_lanyrd cfp, session
 
@@ -17,6 +18,7 @@ class CfpToLanyrdTest < Minitest::Test
     cfp = create_cfp
     session = Minitest::Mock.new
     session.expect :session_present?, true, ['Keynote']
+    session.expect :set_session_speakers, nil, ['Keynote', ['@dumb', '@dumber']]
 
     cfp_to_lanyrd cfp, session
 
@@ -47,14 +49,24 @@ class CfpToLanyrdTest < Minitest::Test
                 [] << Object.new.tap do |schedule|
                   schedule.instance_variable_set('@room_id', @room_id)
                   def schedule.slots
-                    [] << CFP::Slot.new(
+                    cfp = CFP::Slot.new(
                       room_id: @room_id,
                       from_time: '07:00',
-                      to_time: '07:50',
-                      talk: CFP::Talk.new(
-                        title: 'Keynote',
-                        summary: 'Summary'
-                      ))
+                      to_time: '07:50')
+                    def cfp.talk
+                      Object.new.tap do |talk|
+                        def talk.title
+                          'Keynote'
+                        end
+                        def talk.summary
+                          'Summary'
+                        end
+                        def talk.speaker_list
+                          [CFP::Speaker.new({twitter: '@dumb'}), CFP::Speaker.new({twitter: '@dumber'})]
+                        end
+                      end
+                    end
+                    [] << cfp
                   end
                 end
               end

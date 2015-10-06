@@ -14,13 +14,16 @@ def cfp_to_lanyrd(cfp, lanyrd_session)
       puts "Session \"#{session_presenter.title}\" is not eligible to export." if session_presenter.title
       next
     end
-    next if lanyrd_session.session_present?(session_presenter.title)
-    lanyrd_session.add_session(
-      session_presenter.title,
-      session_presenter.abstract,
-      session_presenter.start_at,
-      session_presenter.end_at,
-      session_presenter.room)
+    unless lanyrd_session.session_present?(session_presenter.title)
+      lanyrd_session.add_session(
+        session_presenter.title,
+        session_presenter.abstract,
+        session_presenter.start_at,
+        session_presenter.end_at,
+        session_presenter.room)
+    end
+    twitters = slot.talk.speaker_list.collect(&:twitter).select { |s| !s.nil? && s.length > 0 }
+    lanyrd_session.set_session_speakers(session_presenter.title, twitters)
   end
 end
 

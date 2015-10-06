@@ -10,5 +10,10 @@ module CFP
     attribute :title, String
     attribute :lang, String
     attribute :summary, String
+    attribute :speakers, Array
+
+    def speaker_list
+      speakers.collect { |s| Speaker.from(s['link']['href']) }
+    end
   end
 end

@@ -21,7 +21,7 @@ class LanyrdSession
   end
 
   def session_present?(session_title)
-    @agent.goto "#{@base_url}edit/schedule/?q=#{CGI.escape(session_title)}"
+    goto_session(session_title)
     page = Nokogiri::HTML(@agent.html)
     !page.search('.sessions-table .row-content').empty?
   end
@@ -56,8 +56,32 @@ class LanyrdSession
     !page.search('.mini-profile').empty?
   end
 
-  def add_speaker()
-    @agent.goto "#{@base_url}edit/speakers/"
-    # todo
+  def session_speakers_empty?(title)
+    goto_session(title)
+    @agent.link(text: title).click
+    @agent.link(text: 'Edit speakers').click
+    page = Nokogiri::HTML(@agent.html)
+    page.search('.person-name').empty?
+  end
+
+  def set_session_speakers(title, speakers)
+    if session_speakers_empty?(title)
+      speakers.each do |speaker|
+        @agent.link(text: 'Add new speaker').click
+        parent = @agent.element(css: '.add-speaker-form')
+        parent.wait_until_present
+        parent.text_field(name: 'q').set(speaker)
+        parent.input(value: 'Search Lanyrd').click
+        @agent.element(css: '#js-search-results').wait_until_present
+        @agent.input(value: 'Add speaker to this session').click
+        Watir::Wait.until { @agent.elements(css: '#js-search-results').length == 0 }
+      end
+    end
+  end
+
+  private
+
+  def goto_session(session_title)
+    @agent.goto "#{@base_url}edit/schedule/?q=#{CGI.escape(session_title)}"
   end
 end

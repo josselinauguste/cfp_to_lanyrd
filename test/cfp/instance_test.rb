@@ -22,6 +22,8 @@ class InstanceTest < Minitest::Test
     refute_empty conference.schedule_list.schedules.first.slots.first.room_id
     assert_operator conference.schedule_list.schedules.first.talks.length, :>, 1
     refute_empty conference.schedule_list.schedules.first.talks.first.title
+    refute_empty conference.schedule_list.schedules.first.talks.first.speaker_list
+    refute_empty conference.schedule_list.schedules.first.talks.first.speaker_list.first.last_name
   end
 
   def test_get_speakers
