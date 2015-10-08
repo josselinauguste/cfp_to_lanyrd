@@ -23,8 +23,8 @@ class BdxioSessionPresenter
     case @slot.room_id
     when 'GdAmphi' then 'Grand Amphi'
     when /Amphi(A|B|D|E)/ then "Amphi #{$1}"
-    when /Td(\d\d)/i then "TD #{$1}"
-    when /Td\s(\d\d)/i then "TD #{$1}"
+    when /Td(\d\d)/i then "Salle TD #{$1}"
+    when /Td\s(\d\d)/i then "Salle TD #{$1}"
     end
   end
 
